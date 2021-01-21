@@ -1,0 +1,73 @@
+--Задание 1 А
+-- Написать запрос который выведет таблицу
+
+USE SKB;
+
+SELECT NAME, D_NUMBER, DT, SUMMA
+FROM Клиенты 
+JOIN 
+Договоры ON Клиенты.CLIENT_ID = Договоры.CLIENT_ID
+JOIN
+Операции ON Договоры.D_ID = Операции.D_ID
+
+--Задание 1 Б
+-- Вывести клиентов с максимальной датой сделки
+
+USE SKB;
+
+SELECT  
+Клиенты.NAME, Договоры.D_NUMBER, Операции.DT, Операции.SUMMA
+FROM Клиенты 
+JOIN 
+Договоры ON Клиенты.CLIENT_ID = Договоры.CLIENT_ID
+JOIN
+Операции ON Договоры.D_ID = Операции.D_ID
+WHERE Операции.DT = (SELECT MAX(Операции.DT) FROM Операции)
+
+--Задание 1 В
+-- Вывести номера договоров без операций
+
+USE SKB;
+
+SELECT Договоры.D_NUMBER
+FROM Договоры
+WHERE Договоры.D_ID 
+NOT IN (SELECT Операции.D_ID FROM Операции)
+
+SELECT Договоры.D_NUMBER
+FROM Договоры
+LEFT JOIN 
+Операции ON Договоры.D_ID = Операции.D_ID
+WHERE
+Операции.D_ID IS NULL
+
+-- Написать sql запрос который бы давал таблицу
+
+USE SKB_SOLUTION_2;
+
+SELECT GENDAR, ID_GOODS
+FROM Characteristics_of_clients_parameter
+INNER JOIN 
+Characteristics_of_buying_goods
+ON  Characteristics_of_clients_parameter.ID_CLIENT = Characteristics_of_buying_goods.ID_CLIENT
+WHERE GENDAR = 'F'
+GROUP BY ID_GOODS, GENDAR
+
+-- Найти ошибку
+
+USE SKB_SOLUTION_2;
+
+SELECT *
+FROM Characteristics_of_buying_goods AS t_1
+WHERE (id_client < 10 or id_client > 100) and time > '15:00'
+
+
+-- Написать запрос, чтобы получить кол-во товаров, которые купил каждый из клиентов
+
+USE SKB_SOLUTION_2;
+
+SELECT ID_CLIENT, COUNT(ID_GOODS) AS KOLICHESTVO
+FROM
+Characteristics_of_buying_goods
+GROUP BY ID_CLIENT
+
